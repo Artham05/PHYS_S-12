@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PHYS S-12: Intro to Digital Fabrication </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> 
+  <link href="../style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid">
+ <u><h3>  IOT and networking devices  : </h3></u> <br> 
+ <p> Assignment:<br>
+  1.Control a board from a local wireless network. Program a microcontroller to obtain and respond to information from the internet. Optionally, work with a partner to control a device over a remote server.<br>
+
+
+  <div class="row"></div></p><br>
+  <br>
+  <p> For this assignment I am controlling a buzzer and a LED with esp 32 over local server .  <br>
+    
+    <p>I have attaached the photo of the following<br>
+    1. Circuit<br>
+    3. code<br>
+    4. Video<br>
+    5. Website screenshot<br>
+     </p><br>
+ photo of the circuit:<br>
+ <img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-22%20at%209.27.26%20PM.png" alt="Sew"><br>
+ <br>
+ Screenshot of the code<br>
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-22%20at%209.34.02%20PM.png"style="width:30%" alt="Sew">
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-22%20at%209.34.10%20PM.png"style="width:30%" alt="Sew"><br>
+<br>
+Video of the circuit <br>
+<iframe width="420" height="345" src="https://www.youtube.com/embed/w4x-UraMFQw">
+</iframe><br>
+<br>
+Code for copy-paste<br>
+#include <WiFi.h><br>
+
+
+const char* ssid = "REPLACE_WITH_YOUR_SSID";<br>
+const char* password = "REPLACE_WITH_YOUR_PASSWORD";<br>
+
+
+WiFiServer server(80);<br>
+
+
+String header;<br>
+
+
+String output26State = "off";<br>
+String output27State = "off";<br>
+
+
+const int output26 = 26;<br>
+const int output27 = 27;<br>
+
+
+unsigned long currentTime = millis();<br>
+
+unsigned long previousTime = 0; <br>
+
+const long timeoutTime = 2000;<br>
+
+void setup() {<br>
+  Serial.begin(115200);<br>
+ 
+  pinMode(output26, OUTPUT);<br>
+  pinMode(output27, OUTPUT);<br>
+ 
+  digitalWrite(output26, LOW);<br>
+  digitalWrite(output27, LOW);<br>
+
+  
+  Serial.print("Connecting to ");<br>
+  Serial.println(ssid);<br>
+  WiFi.begin(ssid, password);<br>
+  while (WiFi.status() != WL_CONNECTED) {<br>
+    delay(500);<br>
+    Serial.print(".");<br>
+  }<br>
+  
+  Serial.println("");<br>
+  Serial.println("WiFi connected.");<br>
+  Serial.println("IP address: ");<br>
+  Serial.println(WiFi.localIP());<br>
+  server.begin();<br>
+}<br>
+<br>
+void loop(){<br>
+  WiFiClient client = server.available();   <br>
+
+  if (client) {  <br>                           
+    currentTime = millis();<br>
+    previousTime = currentTime;<br>
+    Serial.println("New Client.");       <br>   
+    String currentLine = "";           <br>
+    while (client.connected() && currentTime - previousTime <= timeoutTime) {  <br>
+      currentTime = millis();o read from the client,<br>
+        char c = client.read();            <br>
+        Serial.write(c);                    <br>
+        header += c;<br>
+      if (client.available()) {        <br>     
+        if (c == '\n') {                 <br>   
+          <br>
+          if (currentLine.length() == 0) {<br>
+           
+           
+            client.println("HTTP/1.1 200 OK");<br>
+            client.println("Content-type:text/html");<br>
+            client.println("Connection: close");<br>
+            client.println();<br>
+            <br>
+            <br>
+            if (header.indexOf("GET /26/on") >= 0) {<br>
+              Serial.println("GPIO 26 on");<br>
+              output26State = "on";<br>
+              digitalWrite(output26, HIGH);<br>
+            } else if (header.indexOf("GET /26/off") >= 0) {<br>
+              Serial.println("GPIO 26 off");<br>
+              output26State = "off";<br>
+              digitalWrite(output26, LOW);<br>
+            } else if (header.indexOf("GET /27/on") >= 0) {<br>
+              Serial.println("GPIO 27 on");<br>
+              output27State = "on";<br><br>
+              digitalWrite(output27, HIGH);<br>
+            } else if (header.indexOf("GET /27/off") >= 0) {<br>
+              Serial.println("GPIO 27 off");<br>
+              output27State = "off";<br>
+              digitalWrite(output27, LOW);<br>
+            }<br>
+            
+            // Display the HTML web page<br>
+            client.println("<!DOCTYPE html><html>");
+            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");<br>
+            client.println("<link rel=\"icon\" href=\"data:,\">");<br>
+            
+            client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");<br>
+            client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");<br>
+            client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");<br>
+            client.println(".button2 {background-color: #555555;}</style></head>");<br>
+            
+            client.println<br>
+  
+            
+          
+            client.println("<p>GPIO 26 - State " + output26State + "</p>");<br>
+              
+            if (output26State=="off") {<br>
+              client.println("<p><a href=\"/26/on\"><button class=\"button\">ON</button></a></p>");<br>
+            } else {<br>
+              client.println("<p><a href=\"/26/off\"><button class=\"button button2\">OFF</button></a></p>");<br>
+            } <br>
+               <br>
+            
+            client.println("<p>GPIO 27 - State " + output27State + "</p>");<br>
+            <br>    
+            if (output27State=="off") {<br>
+              client.println("<p><a href=\"/27/on\"><button class=\"button\">ON</button></a></p>");<br>
+            } else {<br>
+              client.println("<p><a href=\"/27/off\"><button class=\"button button2\">OFF</button></a></p>");<br>
+            }<br>
+            client.println("</body></html>");<br>
+            
+            <br>
+            client.println();<br>
+            <br>
+            break;<br>
+          } else { <br>
+            currentLine = "";<br>
+          }
+        } else if (c != '\r') {  <br>
+          currentLine += c;     <br>
+        }<br>
+      }<br>
+    }<br>
+    // Clear the header variable<br>
+    header = "";<br>
+    // Close the connection<br>
+    client.stop();<br>
+    Serial.println("Client disconnected.");<br>
+    Serial.println("");<br>
+  }<br>
+}<br>
+Website screenshot:<br>
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-22%20at%209.56.39%20PM.png" alt="Sew"><br>
+
+</body>
+</html>

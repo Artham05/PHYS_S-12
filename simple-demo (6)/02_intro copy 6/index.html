@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PHYS S-12: Intro to Digital Fabrication </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> 
+  <link href="../style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid">
+ <u><h3>  Electronic Output Devices : </h3></u> <br> 
+ <p> Assignment:<br>
+  1. Use an output device that you haven't used before.<br>
+2. Write a microcontroller program that integrates at least one input device and one output device. Avoid the delay() function by using either timers or interrupts.<br>
+
+
+  <div class="row"></div></p><br>
+  <br>
+  <p> For the first assignment I used a buzzer as an ouput. Controlling it without any input device and also controlling it with a button switch.  <br>
+    
+    <p>I have attaached the photo of the following<br>
+    1. Circuit<br>
+    2. Tinkercad <br>
+    3. code<br>
+    4. Video<br>
+     </p><br>
+     1. Without any input device :- <br>
+ photo of the circuit:<br>
+ <img src= "file:///Users/arthamagarwal/Downloads/IMG_0044.jpg"style="width:70%" alt="Sew"><br>
+ <br>
+ Screenshot of tinkercad:<br>
+ <img src= "file:///Users/arthamagarwal/Downloads/PHOTO-2021-07-20-18-28-18.jpg"style="width:100%" alt="Sew"><br>
+ Screenshot of the code<br>
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-20%20at%209.51.10%20PM.png"style="width:100%" alt="Sew"><br>
+Video of the circuit <br>
+<iframe width="420" height="345" src="https://www.youtube.com/embed/IRk8PFSTgQw">
+</iframe><br>
+Code for copy-paste<br>
+const int BUTTON_PIN = 7; // Arduino pin connected to button's pin<br>
+const int BUZZER_PIN = 3; // Arduino pin connected to Buzzer's pin<br>
+<br>
+void setup() {<br>
+  Serial.begin(9600);                // initialize serial<br>
+  pinMode(BUTTON_PIN, INPUT_PULLUP); // set arduino pin to input pull-up mode<br>
+  pinMode(BUZZER_PIN, OUTPUT);       // set arduino pin to output mode<br>
+}<br>
+
+void loop() {<br>
+  int buttonState = digitalRead(BUTTON_PIN); // read new state<br>
+<br>
+  if (buttonState == LOW) {<br>
+    Serial.println("The button is being pressed");<br>
+    digitalWrite(BUZZER_PIN, HIGH); // turn on<br>
+  }<br>
+  else<br>
+  if (buttonState == HIGH) {<br>
+    Serial.println("The button is unpressed");<br>
+    digitalWrite(BUZZER_PIN, LOW);  // turn off<br>
+  }<br>
+}<br>
+<br>
+2.  With input device:-
+
+     <p> I used a button switch as an input device.<br>
+    Photo of the circuit:<br>
+  <img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-20%20at%2010.09.34%20PM.png"style="width:100%" alt="Sew"><br>
+    Video of the circuit:<br>
+<iframe width="420" height="345" src="https://www.youtube.com/embed/g_kxvPAWPL4">
+</iframe><br>
+    <br>
+
+<P> For the second assignment I programmed a microcontroller for a circuit with LDR as an input device and an LED as an output device. This program will basically allow the led to glow when the LDR input level increases. This can also be used as an security measure. You will understand more by the photos below. I know we only had to make a program but I went ahead and also made a circuit.<br>
+  Screenshot of the code:<br>
+
+ <img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-20%20at%2010.24.31%20PM.png"style="width:80%" alt="Sew"><br>
+ Code for copy paste:<br>
+
+    int ldr=A0;//Set A0(Analog Input) for LDR.<br>
+int value=0;<br>
+void setup() {<br>
+Serial.begin(9600);<br>
+pinMode(3,OUTPUT);<br>
+}<br>
+<br>
+void loop() {<br>
+value=analogRead(ldr);//Reads the Value of LDR(light).<br>
+Serial.println("LDR value is :");//Prints the value of LDR to Serial Monitor.<br>
+Serial.println(value);<br>
+if(value<300)<br>
+  {<br>
+    digitalWrite(3,HIGH);//Makes the LED glow in Dark.<br>
+  }<br>
+  else<br>
+  {<br>
+    digitalWrite(3,LOW);//Turns the LED OFF in Light.<br>
+  }<br>
+}<br>
+<br>
+Photo of the circuit:<br>
+<img src= "file:///Users/arthamagarwal/Downloads/58CF27EE-5138-491F-84F1-0A0B671F6EC2.JPG"style="width:80%" alt="Sew"><br>
+Screenshot of the serial monitor when there is no light:<br>
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-20%20at%208.23.27%20PM.png"style="width:80%" alt="Sew"><br>
+<br>
+Screenshot of the serial monitor when there is light:<br>
+<img src= "file:///Users/arthamagarwal/Desktop/Screenshot%202021-07-20%20at%208.27.33%20PM.png"style="width:80%" alt="Sew"><br>
+ <br>
+
+</body>
+</html>
